@@ -64,24 +64,16 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as userActions from '../actions/userActions'
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-  ...stateProps,
-  router: ownProps.router,
-  actions: {
-    ...dispatchProps.actions,
-    ...ownProps.actions,
-  }
-}
+import { mergeProps } from 'react-native-redux-routing'
 
-export default connect(
-  state => ({
-    user: state.user,
-  }),
-  dispatch => ({
-    actions: bindActionCreators(userActions, dispatch)
-  }),
-  mergeProps)
-)(class extends React.Component {
+const mapStateToProps = state => ({
+  user: state.user,
+})
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(userActions, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(class extends React.Component {
 
   componentWillMount() {
     const ok = this.props.actions.doSomethingForUser()
@@ -262,7 +254,8 @@ render() {
 The example below shows how to adding a camera button dynamically:
 
 ```jsx
-componentDidMount() {
+componentWillMount() {
+  this.props.actions._setNavTitle('Camera Roll')
   this.props.actions._setNavAction({
     renderer: () => (
       <View style={{ alignItems: 'center', flexDirection: 'row' }}>
@@ -276,6 +269,8 @@ componentDidMount() {
   })
 }
 ```
+
+![](https://cloud.githubusercontent.com/assets/8536244/17747581/0342c128-64e8-11e6-8158-1a1f410a71a8.png)
 
 ## Theming
 
