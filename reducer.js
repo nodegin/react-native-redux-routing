@@ -2,6 +2,7 @@ import { types } from './actions'
 
 const initialState = {
   action: null,
+  options: {},
   routes: [],
   drawerOpen: false,
   navActionRenderer: null,
@@ -11,20 +12,26 @@ const initialState = {
 
 const getTitle = id => (id.slice(0, 1).toUpperCase() + id.slice(1)).replace(/-/g, ' ')
 
-const getUpdate = (action, routes) => {
-  let route
+const getUpdate = (action, state) => {
+  let routes
+  let { route, reset, ...options } = action.options
   if (action.type === types.POP_ROUTE) {
+    routes = state.routes.filter((_, i) => i !== state.routes.length - 1)
     route = routes[routes.length - 1]
     if (!route) {
       throw new Error('Cannot pop the topmost route, route stack contains only 1 child.')
     }
   } else {
-    route = action.route
+    if (action.type === types.PUSH_ROUTE) {
+      routes = [...state.routes, route]
+    } else if (action.type === types.RESET_ROUTES) {
+      routes = [route]
+    }
   }
   return {
     action: action.type,
+    options,
     routes,
-    drawerOpen: false,
     navActionRenderer: null,
     navActionHandler: null,
     navTitle: getTitle(route),
@@ -34,20 +41,11 @@ const getUpdate = (action, routes) => {
 export default function (state = initialState, action = {}) {
   switch (action.type) {
     case types.PUSH_ROUTE:
-      return {
-        ...state,
-        ...getUpdate(action, [...state.routes, action.route]),
-      }
     case types.POP_ROUTE:
-      const routes = state.routes.filter((_, i) => i !== state.routes.length - 1)
-      return {
-        ...state,
-        ...getUpdate(action, routes),
-      }
     case types.RESET_ROUTES:
       return {
         ...state,
-        ...getUpdate(action, [action.route]),
+        ...getUpdate(action, state),
       }
     case types.SET_NAV_ACTION:
       return {

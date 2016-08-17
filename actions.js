@@ -8,23 +8,21 @@ export const types = {
   CLOSE_DRAWER: 'CLOSE_DRAWER',
 }
 
-export const _navigate = (route, reset) => {
+export const _navigate = (route, options = {}) => {
   return dispatch => {
-    if (route === -1) {
-      dispatch({
-        type: types.POP_ROUTE,
-      })
-    } else if (reset) {
-      dispatch({
-        type: types.RESET_ROUTES,
-        route,
-      })
-    } else {
-      dispatch({
-        type: types.PUSH_ROUTE,
-        route,
-      })
+    let type
+    options.route = route
+    if (typeof options.animated !== 'boolean') {
+      options.animated = true
     }
+    if (route === -1) {
+      type = types.POP_ROUTE
+    } else if (options.reset) {
+      type = types.RESET_ROUTES
+    } else {
+      type = types.PUSH_ROUTE
+    }
+    dispatch({ type, options })
   }
 }
 

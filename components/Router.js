@@ -7,14 +7,36 @@ import {
   InteractionManager,
 } from 'react-native'
 
+import buildStyleInterpolator from 'react-native/Libraries/Utilities/buildStyleInterpolator'
+
 import { types } from '../actions'
 import DrawerLayout from './DrawerLayout'
 
-const SceneConfig = {
+const DefaultSceneConfig = {
   ...Navigator.SceneConfigs.PushFromRight,
-  springTension: 200,
-  springFriction: 20,
   gestures: null
+}
+
+const NoTransition = {
+  opacity: {
+    from: 1,
+    to: 1,
+    min: 1,
+    max: 1,
+    type: 'linear',
+    extrapolate: false,
+    round: 100,
+  },
+}
+
+const NoAnimation = {
+  ...Navigator.SceneConfigs.PushFromRight,
+  gestures: null,
+  defaultTransitionVelocity: 50,
+  animationInterpolators: {
+    into: buildStyleInterpolator(NoTransition),
+    out: buildStyleInterpolator(NoTransition),
+  },
 }
 
 export default class extends React.Component {
@@ -59,7 +81,9 @@ export default class extends React.Component {
       this.routes[child.props.id] = child.props
     })
 
-    this.props.actions._navigate(this.props.initialRoute, true)
+    InteractionManager.runAfterInteractions(() => {
+      this.props.actions._navigate(this.props.initialRoute, { reset: true })
+    })
   }
 
   componentWillMount() {
@@ -80,34 +104,38 @@ export default class extends React.Component {
     const currentRoute = this.props.router.routes[this.props.router.routes.length - 1]
     const nextRoute = nextProps.router.routes[nextProps.router.routes.length - 1]
     if (currentRoute !== nextRoute) {
-      this.handleRouteChange(this.routes[currentRoute], this.routes[nextRoute], nextProps.router.action)
+      this.handleRouteChange(this.routes[currentRoute], this.routes[nextRoute], nextProps.router)
     }
   }
 
-  handleRouteChange(currentRouteProps, nextRouteProps, type) {
-    if (type === types.PUSH_ROUTE) {
-      this.navigator.push(this.getRoute(nextRouteProps))
+  handleRouteChange(currentRouteProps, nextRouteProps, routerProps) {
+    if (routerProps.action === types.PUSH_ROUTE) {
+      this.navigator.push(this.getRoute(nextRouteProps, routerProps.options))
+      InteractionManager.runAfterInteractions(() => {
+        this.props.actions._closeDrawer()
+      })
     }
-    if (type === types.POP_ROUTE) {
+    if (routerProps.action === types.POP_ROUTE) {
       const routes = this.navigator.getCurrentRoutes()
       if (routes.length > 0) {
         this.navigator.pop()
       }
     }
-    if (type === types.RESET_ROUTES) {
-      const route = this.getRoute(nextRouteProps)
+    if (routerProps.action === types.RESET_ROUTES) {
+      const route = this.getRoute(nextRouteProps, routerProps.options)
       if (!currentRouteProps) {
         this.navigator.resetTo(route)
       } else {
         this.navigator.push(route)
         InteractionManager.runAfterInteractions(() => {
+          this.props.actions._closeDrawer()
           this.navigator.immediatelyResetRouteStack([route])
         })
       }
     }
   }
 
-  getRoute(routeProps) {
+  getRoute(routeProps, options) {
     let navigation = null
     if (!routeProps.immersive) {
       navigation = (
@@ -118,6 +146,7 @@ export default class extends React.Component {
       id: routeProps.id,
       component: routeProps.component,
       navigation,
+      sceneConfig: options.animated ? (options.sceneConfig || DefaultSceneConfig) : NoAnimation,
     }
   }
 
@@ -144,11 +173,12 @@ export default class extends React.Component {
     return (
       <Navigator
         ref={nav => this.navigator = nav}
-        configureScene={() => SceneConfig}
+        configureScene={route => route.sceneConfig}
         initialRoute={{
           id: null,
           component: View,
           navigation: null,
+          sceneConfig: NoAnimation,
         }}
         renderScene={this.renderScene.bind(this)} />
     )

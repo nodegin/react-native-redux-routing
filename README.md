@@ -115,12 +115,14 @@ You can set the `immersive` property to true to hide the app bar (including navi
 
 All router-provided actions starts with an underscore in order to prevent possible conflictions.
 
-#### `this.props.actions._navigate(routeId, reset = false)`
+#### `this.props.actions._navigate(routeId, options = {})`
 
 ```jsx
 this.props.actions._navigate('settings') // Push the "settings" route to the routes stack
 this.props.actions._navigate(-1) // Pop the last route in the routes stack
-this.props.actions._navigate('home', true) // Reset the routes stack and navigate to "home" route
+this.props.actions._navigate('home', { reset: true }) // Reset the routes stack and navigate to "home" route
+this.props.actions._navigate('page-1', { sceneConfig: CustomConfig }) // Changing scene with custom animation
+this.props.actions._navigate('page-2', { animated: false }) // Changing scene without animation
 ```
 
 #### `this.props.actions._setNavAction(action = { renderer, handler })`
@@ -157,11 +159,22 @@ import { types as routerTypes } from 'react-native-redux-routing'
 
 dispatch({
   type: routerTypes.PUSH_ROUTE,
-  route: 'settings',
+  options: {
+    route: 'settings',
+    sceneConfig: CustomConfig,
+  }
 })
 
 dispatch({
-  type: routerTypes.POP_ROUTE,
+  type: routerTypes.POP_ROUTE, // Animation of popping is same as pushing
+})
+
+dispatch({
+  type: routerTypes.RESET_ROUTES,
+  options: {
+    route: 'settings',
+    animated: false,
+  }
 })
 
 dispatch({
