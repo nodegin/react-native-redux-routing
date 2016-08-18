@@ -1,4 +1,3 @@
-import { Platform } from 'react-native'
 import { types } from './actions'
 
 const initialState = {
@@ -9,7 +8,6 @@ const initialState = {
   navActionRenderer: null,
   navActionHandler: null,
   navTitle: null,
-  statusBarSize: Platform.OS === 'ios' ? 20 : 0,
 }
 
 const getTitle = id => (id.slice(0, 1).toUpperCase() + id.slice(1)).replace(/-/g, ' ')
@@ -69,11 +67,6 @@ export default function (state = initialState, action = {}) {
       return {
         ...state,
         drawerOpen: false,
-      }
-    case '$$_UPDATE_STATUS_BAR_SIZE':
-      return {
-        ...state,
-        statusBarSize: Platform.OS === 'ios' ? 20 : action.size,
       }
     default:
       return state

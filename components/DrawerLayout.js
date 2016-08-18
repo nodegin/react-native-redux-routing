@@ -18,17 +18,33 @@ export default class extends React.Component {
     return 'DrawerLayout'
   }
 
+  state = {
+    androidStatusBarSize: null,
+    isStatusBarTranslucent: false,
+  }
+
   componentWillReceiveProps(nextProps) {
     this.drawer[nextProps.router.drawerOpen ? 'openDrawer' : 'closeDrawer']()
   }
 
+  handleOnLayout = (event) => {
+    if (Platform.OS !== 'android') return
+    if (!this.state.androidStatusBarSize && Platform.Version >= 21) {
+      this.setState({
+        androidStatusBarSize: Math.ceil(windowSize.height - event.nativeEvent.layout.height),
+        isStatusBarTranslucent: true,
+      })
+    }
+  }
+
   render() {
-    const paddingTop = this.props.router.statusBarSize
+    const paddingTop = Platform.OS === 'ios' ? 20 : this.state.androidStatusBarSize
     return (
       <DrawerLayout
         ref={ref => this.drawer = ref}
         drawerWidth={windowSize.width * 0.75}
         drawerPosition={DrawerLayout.positions.Left}
+        onLayout={this.handleOnLayout}
         onDrawerClose={() =>
           this.props.router.drawerOpen ? this.props.actions._closeDrawer() : null
         }
@@ -46,6 +62,10 @@ export default class extends React.Component {
             </View>
           )
         }}>
+        <StatusBar
+          barStyle={this.props.config.statusBarStyle}
+          translucent={this.state.isStatusBarTranslucent}
+          backgroundColor="transparent" />
         <AppBar {...this.props} paddingTop={paddingTop} />
         <View style={styles.solid}>
           {this.props.children}

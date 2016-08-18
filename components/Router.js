@@ -10,7 +10,6 @@ import {
 import buildStyleInterpolator from 'react-native/Libraries/Utilities/buildStyleInterpolator'
 
 import { types } from '../actions'
-import StatusBar from './StatusBar'
 import DrawerLayout from './DrawerLayout'
 
 const DefaultSceneConfig = {
@@ -167,7 +166,7 @@ export default class extends React.Component {
       })
     }
 
-    return <StatusBar {...this.props}>{child}</StatusBar>
+    return child
   }
 
   render() {

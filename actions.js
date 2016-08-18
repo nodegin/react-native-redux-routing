@@ -40,14 +40,3 @@ export const _setNavTitle = title => ({
 export const _openDrawer = () => ({ type: types.OPEN_DRAWER })
 
 export const _closeDrawer = () => ({ type: types.CLOSE_DRAWER })
-
-/*  Router internal method, DO NOT CALL  */
-export const $$_updateStatusBarSize = (_caller, size) => {
-  return (dispatch) => {
-    if (_caller._class() !== 'StatusBar') return
-    dispatch({
-      type: '$$_UPDATE_STATUS_BAR_SIZE',
-      size,
-    })
-  }
-}
