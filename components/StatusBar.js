@@ -23,12 +23,14 @@ export default class extends React.Component {
   }
 
   handleOnLayout = (event) => {
+    if (this.props.router.$$_statusBarConfigured) return
     if (Platform.OS !== 'android') return
-    if (!this.props.router.statusBarSize && Platform.Version >= 21) {
+    let barSize = 0
+    if (Platform.Version >= 21) {
       const statusBarSizeAndroid = Math.ceil(windowSize.height - event.nativeEvent.layout.height)
-      this.setState({ isStatusBarTranslucent: true })
-      this.props.actions.$$_updateStatusBarSize.call(null, this, statusBarSizeAndroid)
+      barSize = statusBarSizeAndroid
     }
+    this.props.actions.$$_updateStatusBar.call(null, this, barSize)
   }
 
   render() {
@@ -36,7 +38,7 @@ export default class extends React.Component {
       <View onLayout={this.handleOnLayout} style={{ flex: 1 }}>
         <StatusBar
           barStyle={this.props.config.statusBarStyle}
-          translucent={this.state.isStatusBarTranslucent}
+          translucent={this.props.router.statusBarSize > 0}
           backgroundColor="transparent" />
         {this.props.children}
       </View>

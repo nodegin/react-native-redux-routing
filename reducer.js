@@ -10,6 +10,7 @@ const initialState = {
   navActionHandler: null,
   navTitle: null,
   statusBarSize: Platform.OS === 'ios' ? 20 : 0,
+  $$_statusBarConfigured: Platform.OS === 'ios',
 }
 
 const getTitle = id => (id.slice(0, 1).toUpperCase() + id.slice(1)).replace(/-/g, ' ')
@@ -71,9 +72,10 @@ export default function (state = initialState, action = {}) {
         drawerOpen: false,
       }
     case '$$_UPDATE_STATUS_BAR_SIZE':
-      return {
+      return state.$$_statusBarConfigured ? state : {
         ...state,
         statusBarSize: Platform.OS === 'ios' ? 20 : action.size,
+        $$_statusBarConfigured: true
       }
     default:
       return state
