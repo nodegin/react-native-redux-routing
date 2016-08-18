@@ -95,7 +95,7 @@ export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(class ex
 })
 ```
 
-## Properties
+## Component Properties
 
 #### For the `<Router/>` element:
 
@@ -110,6 +110,15 @@ You must set the `id` property which is unique to each route.
 You must set the `component` property for which class should be rendered.
 
 You can set the `immersive` property to true to hide the app bar (including navigation drawer).
+
+
+## State Properties
+
+- `this.props.router.drawerOpen`
+- `this.props.router.navTitle`
+- `this.props.router.routes`
+- `this.props.router.statusBarSize`
+
 
 ## API
 
