@@ -118,6 +118,7 @@ You can set the `immersive` property to true to hide the app bar (including navi
 - `this.props.router.navTitle`
 - `this.props.router.routes`
 - `this.props.router.statusBarSize`
+- `this.props.router.appBarSize`
 
 
 ## API
@@ -333,7 +334,7 @@ componentWillMount() {
 ```jsx
 class extends React.Component {
   ...
-  
+
   componentDidMount() {
     this.onSceneFocusListener = () => alert('This component is now focused from route stack!')
     this.onSceneBlurListener = () => alert('This component is now blurred from route stack!')

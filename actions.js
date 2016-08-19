@@ -33,7 +33,10 @@ export const _navigate = (route, options = {}) => {
     }
     dispatch({ type, options })
     //  Not using InteractionManager.runAfterInteractions for better visual effect
-    setTimeout(() => dispatch(_setNavTitle(title)), 0)
+    setTimeout(() => {
+      dispatch(_setNavTitle(title))
+      dispatch(_closeDrawer())
+    }, 0)
   }
 }
 

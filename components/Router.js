@@ -113,9 +113,6 @@ export default class extends React.Component {
   handleRouteChange(currentRoute, nextRoute, nextRouter) {
     if (nextRouter.action === types.PUSH_ROUTE) {
       this.navigator.push(this.getRoute(nextRoute, nextRouter))
-      InteractionManager.runAfterInteractions(() => {
-        this.props.actions._closeDrawer()
-      })
     }
     if (nextRouter.action === types.POP_ROUTE) {
       const routes = this.navigator.getCurrentRoutes()
@@ -130,7 +127,6 @@ export default class extends React.Component {
       } else {
         this.navigator.push(route)
         InteractionManager.runAfterInteractions(() => {
-          this.props.actions._closeDrawer()
           this.navigator.immediatelyResetRouteStack([route])
         })
       }

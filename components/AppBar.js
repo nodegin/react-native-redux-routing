@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 
 const windowSize = Dimensions.get('window')
-const appBarHeight = 54
 const appBarIconSize = 24
 
 export default class extends React.Component {
@@ -44,10 +43,13 @@ export default class extends React.Component {
     return (
       <View style={[styles.appBar, {
         backgroundColor: this.props.config.accentColor,
-        height: appBarHeight + this.props.paddingTop,
-        paddingTop: this.props.paddingTop,
+        height: this.props.router.appBarSize + this.props.router.statusBarSize,
+        paddingTop: this.props.router.statusBarSize,
       }]}>
-        <View style={[styles.appBarTitle, { top: this.props.paddingTop }]}>
+        <View style={[styles.appBarTitle, {
+          height: this.props.router.appBarSize,
+          top: this.props.router.statusBarSize,
+        }]}>
           <Text style={[styles.appBarTitleText, { color: contrastColor }]}>{ this.props.router.navTitle }</Text>
         </View>
         <View style={styles.appBarMenuIconWrapper}>
@@ -119,7 +121,6 @@ const styles = StyleSheet.create({
   },
   appBarTitle: {
     alignItems: 'center',
-    height: appBarHeight,
     justifyContent: 'center',
     left: 0,
     position: 'absolute',
