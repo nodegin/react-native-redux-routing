@@ -161,6 +161,20 @@ this.props.actions._openDrawer() // Open the navigation drawer
 this.props.actions._closeDrawer() // Close the navigation drawer
 ```
 
+#### `this.props.actions._addRouteListener(type, listener)`
+
+```jsx
+this.props.actions._addRouteListener('focus', () => 'Entered scene') // Attach an `onFocus` listener for the current route
+this.props.actions._addRouteListener('blur', () => 'Leaved scene') // Attach an `onBlur` listener for the current route
+```
+
+#### `this.props.actions._removeRouteListener(listener)`
+
+```jsx
+this.props.actions._removeRouteListener('focus', listener) // `listener` must be the same one as you added to remove
+this.props.actions._removeRouteListener('blur', listener) // `listener` must be the same one as you added to remove
+```
+
 The dispatchable actions are listed below:
 
 ```jsx
@@ -203,6 +217,26 @@ dispatch({
 
 dispatch({
   type: routerTypes.CLOSE_DRAWER,
+})
+
+dispatch({
+  type: routerTypes.ADD_BLUR_LISTENER,
+  listener,
+})
+
+dispatch({
+  type: routerTypes.REMOVE_BLUR_LISTENER,
+  listener,
+})
+
+dispatch({
+  type: routerTypes.ADD_FOCUS_LISTENER,
+  listener,
+})
+
+dispatch({
+  type: routerTypes.REMOVE_FOCUS_LISTENER,
+  listener,
 })
 ```
 
@@ -293,6 +327,29 @@ componentWillMount() {
 ```
 
 ![](https://cloud.githubusercontent.com/assets/8536244/17747581/0342c128-64e8-11e6-8158-1a1f410a71a8.png)
+
+## Listening route focus / blur event
+
+```jsx
+class extends React.Component {
+  ...
+  
+  componentDidMount() {
+    this.onSceneFocusListener = () => alert('This component is now focused from route stack!')
+    this.onSceneBlurListener = () => alert('This component is now blurred from route stack!')
+    this.props.actions._addRouteListener('focus', this.onSceneFocusListener)
+    this.props.actions._addRouteListener('blur', this.onSceneBlurListener)
+  }
+
+  componentWillUnmount() {
+    this.props.actions._removeRouteListener('focus', this.onSceneFocusListener)
+    this.props.actions._removeRouteListener('blur', this.onSceneBlurListener)
+    // Alert message will not be shown again from now on
+  }
+
+  ...
+}
+```
 
 ## Theming
 

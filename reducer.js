@@ -10,6 +10,8 @@ const initialState = {
   navActionHandler: null,
   navTitle: null,
   statusBarSize: Platform.OS === 'ios' ? 20 : 0,
+  $$_blurEventListeners: {},
+  $$_focusEventListeners: {},
   $$_statusBarConfigured: Platform.OS === 'ios',
 }
 
@@ -70,6 +72,27 @@ export default function (state = initialState, action = {}) {
       return {
         ...state,
         drawerOpen: false,
+      }
+    case types.ADD_BLUR_LISTENER:
+    case types.ADD_FOCUS_LISTENER:
+      /*  Get current route id  */
+      const routeId = state.routes[state.routes.length - 1]
+      const addListeners = `$$_${action.type === types.ADD_BLUR_LISTENER ? 'blur' : 'focus'}EventListeners`
+      return {
+        ...state,
+        [addListeners]: {
+          ...state[addListeners],
+          [routeId]: action.listener,
+        }
+      }
+    case types.REMOVE_BLUR_LISTENER:
+    case types.REMOVE_FOCUS_LISTENER:
+      const removeListeners = `$$_${action.type === types.REMOVE_BLUR_LISTENER ? 'blur' : 'focus'}EventListeners`
+      const keys = Object.keys(state[removeListeners])
+      const withoutListener = keys.filter(k => state[removeListeners][k] !== action.listener).map(k => state[removeListeners][k])
+      return {
+        ...state,
+        [removeListeners]: withoutListener,
       }
     case '$$_UPDATE_STATUS_BAR_SIZE':
       return state.$$_statusBarConfigured ? state : {

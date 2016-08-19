@@ -168,7 +168,7 @@ export default class extends React.Component {
       })
     }
 
-    return <StatusBar {...this.props}>{child}</StatusBar>
+    return <StatusBar {...this.props} navigator={navigator}>{child}</StatusBar>
   }
 
   render() {

@@ -18,8 +18,44 @@ export default class extends React.Component {
     return 'StatusBar'
   }
 
-  state = {
-    isStatusBarTranslucent: false,
+  currentRoute = null
+  nextRoute = null
+
+  componentWillMount() {
+    this.onWillFocusNavigationSub = this.props.navigator.navigationContext.addListener('willfocus', event => {
+      // this.currentRoute will go away
+      // event.data.route will be focused
+      this.nextRoute = event.data.route
+    })
+    this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', event => {
+      if (this.currentRoute) {
+        const goneId = this.currentRoute.id
+        if (this.props.router.$$_blurEventListeners[goneId]) {
+          this.props.router.$$_blurEventListeners[goneId]()
+        }
+      }
+      // this.currentRoute has gone away
+      // event.data.route has been focused
+      this.currentRoute = event.data.route
+      this.nextRoute = null
+      if (this.currentRoute) {
+        const currentId = this.currentRoute.id
+        if (this.props.router.$$_focusEventListeners[currentId]) {
+          this.props.router.$$_focusEventListeners[currentId]()
+        }
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.onWillFocusNavigationSub) {
+      this.onWillFocusNavigationSub.remove()
+      this.onWillFocusNavigationSub = null
+    }
+    if (this.onDidFocusNavigationSub) {
+      this.onDidFocusNavigationSub.remove()
+      this.onDidFocusNavigationSub = null
+    }
   }
 
   handleOnLayout = (event) => {
