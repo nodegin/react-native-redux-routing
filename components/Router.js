@@ -92,6 +92,7 @@ export default class extends React.Component {
       BackAndroid.addEventListener('hardwareBackPress', () => {
         if (this.props.router.drawerOpen) {
           this.props.actions._closeDrawer()
+          return true
         } else if (this.props.router.routes.length > 1) {
           this.props.actions._navigate(-1)
           return true
