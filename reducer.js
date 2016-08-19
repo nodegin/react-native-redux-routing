@@ -15,8 +15,6 @@ const initialState = {
   $$_statusBarConfigured: Platform.OS === 'ios',
 }
 
-const getTitle = id => (id.slice(0, 1).toUpperCase() + id.slice(1)).replace(/-/g, ' ')
-
 const getUpdate = (action, state) => {
   let routes
   let { route, reset, ...options } = action.options
@@ -39,7 +37,6 @@ const getUpdate = (action, state) => {
     routes,
     navActionRenderer: null,
     navActionHandler: null,
-    navTitle: getTitle(route),
   }
 }
 

@@ -1,3 +1,5 @@
+import { InteractionManager } from 'react-native'
+
 export const types = {
   PUSH_ROUTE: 'PUSH_ROUTE',
   POP_ROUTE: 'POP_ROUTE',
@@ -12,29 +14,38 @@ export const types = {
   REMOVE_FOCUS_LISTENER: 'REMOVE_FOCUS_LISTENER',
 }
 
+const getTitle = id => (id.slice(0, 1).toUpperCase() + id.slice(1)).replace(/-/g, ' ')
+
 export const _navigate = (route, options = {}) => {
-  return dispatch => {
-    let type
+  return (dispatch, getState) => {
+    const state = getState()
+    let type, title
     options.route = route
     if (typeof options.animated !== 'boolean') {
       options.animated = true
     }
     if (route === -1) {
       type = types.POP_ROUTE
-    } else if (options.reset) {
-      type = types.RESET_ROUTES
+      title = getTitle(state.router.routes[state.router.routes.length - 2] || '')
     } else {
-      type = types.PUSH_ROUTE
+      type = options.reset ? types.RESET_ROUTES : types.PUSH_ROUTE
+      title = getTitle(route)
     }
     dispatch({ type, options })
+    //  Not using InteractionManager.runAfterInteractions for better visual effect
+    setTimeout(() => dispatch(_setNavTitle(title)), 0)
   }
 }
 
-export const _setNavAction = navAction => ({
-  type: types.SET_NAV_ACTION,
-  renderer: navAction.renderer,
-  handler: navAction.handler,
-})
+export const _setNavAction = navAction => {
+  return dispatch => InteractionManager.runAfterInteractions(() => {
+    dispatch({
+      type: types.SET_NAV_ACTION,
+      renderer: navAction.renderer,
+      handler: navAction.handler,
+    })
+  })
+}
 
 export const _setNavTitle = title => ({
   type: types.SET_NAV_TITLE,

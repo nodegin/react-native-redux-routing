@@ -23,25 +23,27 @@ export default class extends React.Component {
 
   componentWillMount() {
     this.onWillFocusNavigationSub = this.props.navigator.navigationContext.addListener('willfocus', event => {
-      // this.currentRoute will go away
-      // event.data.route will be focused
+      //  this.currentRoute will go away
+      //  event.data.route will be focused
       this.nextRoute = event.data.route
     })
     this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', event => {
       if (this.currentRoute) {
         const goneId = this.currentRoute.id
         if (this.props.router.$$_blurEventListeners[goneId]) {
-          this.props.router.$$_blurEventListeners[goneId]()
+          //  make it async
+          setTimeout(this.props.router.$$_blurEventListeners[goneId], 0)
         }
       }
-      // this.currentRoute has gone away
-      // event.data.route has been focused
+      //  this.currentRoute has gone away
+      //  event.data.route has been focused
       this.currentRoute = event.data.route
       this.nextRoute = null
       if (this.currentRoute) {
         const currentId = this.currentRoute.id
         if (this.props.router.$$_focusEventListeners[currentId]) {
-          this.props.router.$$_focusEventListeners[currentId]()
+          //  make it async
+          setTimeout(this.props.router.$$_focusEventListeners[currentId], 0)
         }
       }
     })
