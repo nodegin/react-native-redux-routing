@@ -110,22 +110,22 @@ export default class extends React.Component {
     }
   }
 
-  handleRouteChange(currentRouteProps, nextRouteProps, routerProps) {
-    if (routerProps.action === types.PUSH_ROUTE) {
-      this.navigator.push(this.getRoute(nextRouteProps, routerProps.options))
+  handleRouteChange(currentRoute, nextRoute, nextRouter) {
+    if (nextRouter.action === types.PUSH_ROUTE) {
+      this.navigator.push(this.getRoute(nextRoute, nextRouter))
       InteractionManager.runAfterInteractions(() => {
         this.props.actions._closeDrawer()
       })
     }
-    if (routerProps.action === types.POP_ROUTE) {
+    if (nextRouter.action === types.POP_ROUTE) {
       const routes = this.navigator.getCurrentRoutes()
       if (routes.length > 0) {
         this.navigator.pop()
       }
     }
-    if (routerProps.action === types.RESET_ROUTES) {
-      const route = this.getRoute(nextRouteProps, routerProps.options)
-      if (!currentRouteProps) {
+    if (nextRouter.action === types.RESET_ROUTES) {
+      const route = this.getRoute(nextRoute, nextRouter)
+      if (!currentRoute) {
         this.navigator.resetTo(route)
       } else {
         this.navigator.push(route)
@@ -137,18 +137,22 @@ export default class extends React.Component {
     }
   }
 
-  getRoute(routeProps, options) {
+  getRoute(nextRoute, nextRouter) {
+    if (!nextRoute) {
+      const route = nextRouter.routes[nextRouter.routes.length - 1]
+      throw new Error('Try to navigate to an unknown route `' + route + '`')
+    }
     let navigation = null
-    if (!routeProps.immersive) {
+    if (!nextRoute.immersive) {
       navigation = (
-        <DrawerLayout {...routeProps} config={this.config} />
+        <DrawerLayout {...nextRoute} config={this.config} />
       )
     }
     return {
-      id: routeProps.id,
-      component: routeProps.component,
+      id: nextRoute.id,
+      component: nextRoute.component,
       navigation,
-      sceneConfig: options.animated ? (options.sceneConfig || DefaultSceneConfig) : NoAnimation,
+      sceneConfig: nextRouter.options.animated ? (nextRouter.options.sceneConfig || DefaultSceneConfig) : NoAnimation,
     }
   }
 
