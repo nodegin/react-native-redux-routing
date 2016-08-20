@@ -44,6 +44,8 @@ export default class extends React.Component {
       pathData = !router.transitioning && router.routes.length > 1 ? backIcon : router.routes.length > 2 ? backIcon : menuIcon
     } else if (router.action === types.ROUTE_POP) {
       pathData = !router.transitioning && router.routes.length < 2 ? menuIcon : backIcon
+    } else if (router.action === types.ROUTE_REPLACE) {
+      pathData = router.routes.length > 1 ? backIcon : menuIcon
     } else {
       pathData = menuIcon
     }
