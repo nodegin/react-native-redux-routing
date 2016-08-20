@@ -9,6 +9,8 @@ import {
   WebView,
 } from 'react-native'
 
+import { types } from '../actions'
+
 const windowSize = Dimensions.get('window')
 const appBarIconSize = 24
 
@@ -18,39 +20,45 @@ export default class extends React.Component {
     return 'AppBar'
   }
 
-  componentWillMount() {
-    this.onWillFocusNavigationSub = this.props.navigator.navigationContext.addListener('willfocus', () => this.transitioning = true)
-    this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', () => this.transitioning = false)
+  handleMenuPress = () => {
+    if (this.props.router.transitioning) {
+      return
+    }
+    setTimeout(() => {
+      if (this.props.router.routes.length > 1) {
+        this.props.actions._navigate(-1)
+      } else {
+        this.props.actions._openDrawer()
+      }
+    }, 150)
   }
 
-  componentWillUnmount() {
-    if (this.onWillFocusNavigationSub) {
-      this.onWillFocusNavigationSub.remove()
-      this.onWillFocusNavigationSub = null
-    }
-    if (this.onDidFocusNavigationSub) {
-      this.onDidFocusNavigationSub.remove()
-      this.onDidFocusNavigationSub = null
-    }
-  }
+  handleNavActionPress = () => setTimeout(this.props.router.navActionHandler, 150)
 
   render() {
-    const canBack = this.props.router.routes.length > 1 && !this.transitioning
-    const pathData = canBack ?
-      'M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z' :
-      'M19,10H5V8H19V10M19,16H5V14H19V16Z'
+    const { router } = this.props
+    const menuIcon = 'M19,10H5V8H19V10M19,16H5V14H19V16Z'
+    const backIcon = 'M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z'
+    let pathData
+    if (router.action === types.ROUTE_PUSH) {
+      pathData = !router.transitioning && router.routes.length > 1 ? backIcon : router.routes.length > 2 ? backIcon : menuIcon
+    } else if (router.action === types.ROUTE_POP) {
+      pathData = !router.transitioning && router.routes.length < 2 ? menuIcon : backIcon
+    } else {
+      pathData = menuIcon
+    }
     const contrastColor = this.props.config.statusBarStyle === 'default' ? '#000' : '#fff'
     return (
       <View style={[styles.appBar, {
         backgroundColor: this.props.config.accentColor,
-        height: this.props.router.appBarSize + this.props.router.statusBarSize,
-        paddingTop: this.props.router.statusBarSize,
+        height: router.appBarSize + router.statusBarSize,
+        paddingTop: router.statusBarSize,
       }]}>
         <View style={[styles.appBarTitle, {
-          height: this.props.router.appBarSize,
-          top: this.props.router.statusBarSize,
+          height: router.appBarSize,
+          top: router.statusBarSize,
         }]}>
-          <Text style={[styles.appBarTitleText, { color: contrastColor }]}>{ this.props.router.navTitle }</Text>
+          <Text style={[styles.appBarTitleText, { color: contrastColor }]}>{ router.navTitle }</Text>
         </View>
         <View style={styles.appBarMenuIconWrapper}>
           <View style={styles.appBarMenuIcon}>
@@ -68,18 +76,18 @@ export default class extends React.Component {
           <TouchableHighlight
             style={[styles.appBarMenuIconHighlight, styles.appBarMenuIconWrapper]}
             underlayColor="rgba(255,255,255,.25)"
-            onPress={() => canBack ? this.props.actions._navigate(-1) : this.props.actions._openDrawer()}>
+            onPress={this.handleMenuPress}>
             <View />
           </TouchableHighlight>
         </View>
         <View style={styles.appBarFillBlank} />
         {
-          !this.props.router.navActionRenderer ? null :
+          !router.navActionRenderer ? null :
           <TouchableHighlight
             style={styles.appBarIconWrapper}
             underlayColor="rgba(255,255,255,.25)"
-            onPress={this.props.router.navActionHandler}>
-            {this.props.router.navActionRenderer()}
+            onPress={this.handleNavActionPress}>
+            {router.navActionRenderer()}
           </TouchableHighlight>
         }
       </View>

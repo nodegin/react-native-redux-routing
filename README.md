@@ -119,6 +119,7 @@ You can set the `immersive` property to true to hide the app bar (including navi
 - `this.props.router.routes`
 - `this.props.router.statusBarSize`
 - `this.props.router.appBarSize`
+- `this.props.router.transitioning`
 
 
 ## API
@@ -133,6 +134,7 @@ this.props.actions._navigate(-1) // Pop the last route in the routes stack
 this.props.actions._navigate('home', { reset: true }) // Reset the routes stack and navigate to "home" route
 this.props.actions._navigate('page-1', { sceneConfig: CustomConfig }) // Changing scene with custom animation
 this.props.actions._navigate('page-2', { animated: false }) // Changing scene without animation
+this.props.actions._navigate('another', { replace: true }) // Replace the current scene to new scene
 ```
 
 #### `this.props.actions._setNavAction(action = { renderer, handler })`
@@ -182,7 +184,7 @@ The dispatchable actions are listed below:
 import { types as routerTypes } from 'react-native-redux-routing'
 
 dispatch({
-  type: routerTypes.PUSH_ROUTE,
+  type: routerTypes.ROUTE_PUSH,
   options: {
     route: 'settings',
     sceneConfig: CustomConfig,
@@ -190,11 +192,22 @@ dispatch({
 })
 
 dispatch({
-  type: routerTypes.POP_ROUTE, // Animation of popping is same as pushing
+  type: routerTypes.ROUTE_POP,
+  options: {
+    sceneConfig: CustomConfig,
+  }
 })
 
 dispatch({
-  type: routerTypes.RESET_ROUTES,
+  type: routerTypes.ROUTE_REPLACE,
+  options: {
+    route: 'another',
+    sceneConfig: CustomConfig,
+  }
+})
+
+dispatch({
+  type: routerTypes.ROUTE_RESET,
   options: {
     route: 'settings',
     animated: false,

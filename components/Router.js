@@ -111,16 +111,33 @@ export default class extends React.Component {
   }
 
   handleRouteChange(currentRoute, nextRoute, nextRouter) {
-    if (nextRouter.action === types.PUSH_ROUTE) {
+    if (nextRouter.action === types.ROUTE_PUSH) {
       this.navigator.push(this.getRoute(nextRoute, nextRouter))
     }
-    if (nextRouter.action === types.POP_ROUTE) {
+    if (nextRouter.action === types.ROUTE_POP) {
       const routes = this.navigator.getCurrentRoutes()
-      if (routes.length > 0) {
-        this.navigator.pop()
+      if (routes.length < 1) {
+        return
       }
+      if (nextRouter.options.sceneConfig) {
+        const newStack = [...routes]
+        newStack[routes.length - 1].sceneConfig = nextRouter.options.sceneConfig
+        this.navigator.immediatelyResetRouteStack(newStack)
+      }
+      InteractionManager.runAfterInteractions(this.navigator.pop)
     }
-    if (nextRouter.action === types.RESET_ROUTES) {
+    if (nextRouter.action === types.ROUTE_REPLACE) {
+      const routes = this.navigator.getCurrentRoutes()
+      const savedSceneConfig = routes[routes.length - 1].sceneConfig
+      const route = this.getRoute(nextRoute, nextRouter)
+      this.navigator.push(route)
+      InteractionManager.runAfterInteractions(() => {
+        const newStack = routes.filter((r, i) => i <= routes.length - 1 - 1).concat(route)
+        newStack[newStack.length - 1].sceneConfig = savedSceneConfig
+        this.navigator.immediatelyResetRouteStack(newStack)
+      })
+    }
+    if (nextRouter.action === types.ROUTE_RESET) {
       const route = this.getRoute(nextRoute, nextRouter)
       if (!currentRoute) {
         this.navigator.resetTo(route)

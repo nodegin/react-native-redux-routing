@@ -26,6 +26,7 @@ export default class extends React.Component {
       //  this.currentRoute will go away
       //  event.data.route will be focused
       this.nextRoute = event.data.route
+      this.props.actions.$$_pageTransitioning.call(null, this, true)
     })
     this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', event => {
       if (this.currentRoute) {
@@ -46,6 +47,7 @@ export default class extends React.Component {
           setTimeout(this.props.router.$$_focusEventListeners[currentId], 0)
         }
       }
+      this.props.actions.$$_pageTransitioning.call(null, this, false)
     })
   }
 
@@ -68,7 +70,7 @@ export default class extends React.Component {
       const statusBarSizeAndroid = Math.ceil(windowSize.height - event.nativeEvent.layout.height)
       barSize = statusBarSizeAndroid
     }
-    this.props.actions.$$_updateStatusBar.call(null, this, barSize)
+    this.props.actions.$$_updateStatusBarSize.call(null, this, barSize)
   }
 
   render() {

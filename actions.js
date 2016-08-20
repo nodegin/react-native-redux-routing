@@ -1,9 +1,10 @@
 import { InteractionManager } from 'react-native'
 
 export const types = {
-  PUSH_ROUTE: 'PUSH_ROUTE',
-  POP_ROUTE: 'POP_ROUTE',
-  RESET_ROUTES: 'RESET_ROUTES',
+  ROUTE_PUSH: 'ROUTE_PUSH',
+  ROUTE_POP: 'ROUTE_POP',
+  ROUTE_REPLACE: 'ROUTE_REPLACE',
+  ROUTE_RESET: 'ROUTE_RESET',
   SET_NAV_ACTION: 'SET_NAV_ACTION',
   SET_NAV_TITLE: 'SET_NAV_TITLE',
   OPEN_DRAWER: 'OPEN_DRAWER',
@@ -25,10 +26,10 @@ export const _navigate = (route, options = {}) => {
       options.animated = true
     }
     if (route === -1) {
-      type = types.POP_ROUTE
+      type = types.ROUTE_POP
       title = getTitle(state.router.routes[state.router.routes.length - 2] || '')
     } else {
-      type = options.reset ? types.RESET_ROUTES : types.PUSH_ROUTE
+      type = options.reset ? types.ROUTE_RESET : options.replace ? types.ROUTE_REPLACE : types.ROUTE_PUSH
       title = getTitle(route)
     }
     dispatch({ type, options })
@@ -79,12 +80,21 @@ export const _removeRouteListener = (type, listener) => {
 }
 
 /*  Router internal method, DO NOT CALL  */
-export const $$_updateStatusBar = (_caller, size) => {
+export const $$_updateStatusBarSize = (_caller, size) => {
   return (dispatch) => {
     if (_caller._class() !== 'StatusBar') return
     dispatch({
       type: '$$_UPDATE_STATUS_BAR_SIZE',
       size,
+    })
+  }
+}
+export const $$_pageTransitioning = (_caller, transitioning) => {
+  return (dispatch) => {
+    if (_caller._class() !== 'StatusBar') return
+    dispatch({
+      type: '$$_SET_PAGE_TRANSITIONING',
+      transitioning,
     })
   }
 }

@@ -11,6 +11,7 @@ const initialState = {
   navTitle: null,
   statusBarSize: Platform.OS === 'ios' ? 20 : 0,
   appBarSize: 54,
+  transitioning: false,
   $$_blurEventListeners: {},
   $$_focusEventListeners: {},
   $$_statusBarConfigured: Platform.OS === 'ios',
@@ -19,16 +20,18 @@ const initialState = {
 const getUpdate = (action, state) => {
   let routes
   let { route, reset, ...options } = action.options
-  if (action.type === types.POP_ROUTE) {
+  if (action.type === types.ROUTE_POP) {
     routes = state.routes.filter((_, i) => i !== state.routes.length - 1)
     route = routes[routes.length - 1]
     if (!route) {
       throw new Error('Cannot pop the topmost route, route stack contains only 1 child.')
     }
   } else {
-    if (action.type === types.PUSH_ROUTE) {
+    if (action.type === types.ROUTE_PUSH) {
       routes = [...state.routes, route]
-    } else if (action.type === types.RESET_ROUTES) {
+    } else if (action.type === types.ROUTE_REPLACE) {
+      routes = state.routes.filter((_, i) => i !== state.routes.length - 1).concat(route)
+    } else if (action.type === types.ROUTE_RESET) {
       routes = [route]
     }
   }
@@ -43,9 +46,10 @@ const getUpdate = (action, state) => {
 
 export default function (state = initialState, action = {}) {
   switch (action.type) {
-    case types.PUSH_ROUTE:
-    case types.POP_ROUTE:
-    case types.RESET_ROUTES:
+    case types.ROUTE_PUSH:
+    case types.ROUTE_POP:
+    case types.ROUTE_REPLACE:
+    case types.ROUTE_RESET:
       return {
         ...state,
         ...getUpdate(action, state),
@@ -97,6 +101,11 @@ export default function (state = initialState, action = {}) {
         ...state,
         statusBarSize: Platform.OS === 'ios' ? 20 : action.size,
         $$_statusBarConfigured: true
+      }
+    case '$$_SET_PAGE_TRANSITIONING':
+      return {
+        ...state,
+        transitioning: action.transitioning,
       }
     default:
       return state
