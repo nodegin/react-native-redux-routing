@@ -1,7 +1,7 @@
 # react-native-redux-routing
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
-[![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](/nodegin/react-native-redux-routing/wiki/Changelog)
+[![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)
 
 An exquisitely crafted routing component for Redux based React Native applications.
 
