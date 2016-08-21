@@ -29,24 +29,24 @@ export default class extends React.Component {
       this.props.actions.$$_pageTransitioning.call(null, this, true)
     })
     this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', event => {
-      if (this.currentRoute) {
-        const goneId = this.currentRoute.id
-        if (this.props.router.$$_blurEventListeners[goneId] && !this.props.router.$$_routeIsChanging) {
-          //  make it async
-          setTimeout(this.props.router.$$_blurEventListeners[goneId], 0)
+      if (this.currentRoute === null && this.nextRoute === null) {
+        //  initial route
+        if (this.props.router.$$_focusEventListeners[event.data.route.id]) {
+          this.props.router.$$_focusEventListeners[event.data.route.id]()
+        }
+      } else if (this.currentRoute !== null && this.nextRoute !== null) {
+        //  route changed
+        if (this.props.router.$$_blurEventListeners[this.currentRoute.id]) {
+          this.props.router.$$_blurEventListeners[this.currentRoute.id]()
+        }
+        if (this.props.router.$$_focusEventListeners[this.nextRoute.id]) {
+          this.props.router.$$_focusEventListeners[this.nextRoute.id]()
         }
       }
       //  this.currentRoute has gone away
       //  event.data.route has been focused
       this.currentRoute = event.data.route
       this.nextRoute = null
-      if (this.currentRoute) {
-        const currentId = this.currentRoute.id
-        if (this.props.router.$$_focusEventListeners[currentId] && !this.props.router.$$_routeIsChanging) {
-          //  make it async
-          setTimeout(this.props.router.$$_focusEventListeners[currentId], 0)
-        }
-      }
       this.props.actions.$$_pageTransitioning.call(null, this, false)
     })
   }

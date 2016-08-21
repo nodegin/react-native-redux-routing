@@ -91,12 +91,14 @@ export default function (state = initialState, action = {}) {
       }
     case types.REMOVE_BLUR_LISTENER:
     case types.REMOVE_FOCUS_LISTENER:
-      const removeListeners = `$$_${action.type === types.REMOVE_BLUR_LISTENER ? 'blur' : 'focus'}EventListeners`
-      const keys = Object.keys(state[removeListeners])
-      const withoutListener = keys.filter(k => state[removeListeners][k] !== action.listener).map(k => state[removeListeners][k])
+      const listenerType = `$$_${action.type === types.REMOVE_BLUR_LISTENER ? 'blur' : 'focus'}EventListeners`
+      const filtered = Object.keys(state[listenerType]).reduce((listeners, route) =>{
+        const current = state[listenerType][route] === action.listener ? {} : { [route]: state[listenerType][route] }
+        return { ...listeners, ...current, }
+      }, {})
       return {
         ...state,
-        [removeListeners]: withoutListener,
+        [listenerType]: filtered,
       }
     case '$$_UPDATE_STATUS_BAR_SIZE':
       return state.$$_statusBarConfigured ? state : {
