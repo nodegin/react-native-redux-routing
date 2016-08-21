@@ -98,3 +98,12 @@ export const $$_pageTransitioning = (_caller, transitioning) => {
     })
   }
 }
+export const $$_routeIsChanging = (_caller, changing) => {
+  return (dispatch) => {
+    if (_caller._class() !== 'Router') return
+    dispatch({
+      type: '$$_DISPATCH_ROUTE_CHANGING',
+      changing,
+    })
+  }
+}

@@ -15,6 +15,7 @@ const initialState = {
   $$_blurEventListeners: {},
   $$_focusEventListeners: {},
   $$_statusBarConfigured: Platform.OS === 'ios',
+  $$_routeIsChanging: false,
 }
 
 const getUpdate = (action, state) => {
@@ -41,6 +42,7 @@ const getUpdate = (action, state) => {
     routes,
     navActionRenderer: null,
     navActionHandler: null,
+    $$_routeIsChanging: true,
   }
 }
 
@@ -106,6 +108,11 @@ export default function (state = initialState, action = {}) {
       return {
         ...state,
         transitioning: action.transitioning,
+      }
+    case '$$_DISPATCH_ROUTE_CHANGING':
+      return {
+        ...state,
+        $$_routeIsChanging: action.changing,
       }
     default:
       return state

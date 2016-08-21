@@ -31,7 +31,7 @@ export default class extends React.Component {
     this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', event => {
       if (this.currentRoute) {
         const goneId = this.currentRoute.id
-        if (this.props.router.$$_blurEventListeners[goneId]) {
+        if (this.props.router.$$_blurEventListeners[goneId] && !this.props.router.$$_routeIsChanging) {
           //  make it async
           setTimeout(this.props.router.$$_blurEventListeners[goneId], 0)
         }
@@ -42,7 +42,7 @@ export default class extends React.Component {
       this.nextRoute = null
       if (this.currentRoute) {
         const currentId = this.currentRoute.id
-        if (this.props.router.$$_focusEventListeners[currentId]) {
+        if (this.props.router.$$_focusEventListeners[currentId] && !this.props.router.$$_routeIsChanging) {
           //  make it async
           setTimeout(this.props.router.$$_focusEventListeners[currentId], 0)
         }

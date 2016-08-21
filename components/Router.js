@@ -122,6 +122,7 @@ export default class extends React.Component {
 
   handleRouteChange(currentRoute, nextRoute, nextRouter) {
     if (nextRouter.action === types.ROUTE_PUSH) {
+      this.props.actions.$$_routeIsChanging.call(null, this, false)
       this.navigator.push(this.getRoute(nextRoute, nextRouter))
     }
     if (nextRouter.action === types.ROUTE_POP) {
@@ -135,7 +136,10 @@ export default class extends React.Component {
         newStack[routes.length - 1].sceneConfig = sceneConfig
         this.navigator.immediatelyResetRouteStack(newStack)
       }
-      InteractionManager.runAfterInteractions(this.navigator.pop)
+      InteractionManager.runAfterInteractions(() => {
+        this.props.actions.$$_routeIsChanging.call(null, this, false)
+        this.navigator.pop()
+      })
     }
     if (nextRouter.action === types.ROUTE_REPLACE) {
       const routes = this.navigator.getCurrentRoutes()
@@ -145,16 +149,19 @@ export default class extends React.Component {
       InteractionManager.runAfterInteractions(() => {
         const newStack = routes.filter((r, i) => i <= routes.length - 1 - 1).concat(route)
         newStack[newStack.length - 1].sceneConfig = savedSceneConfig
+        this.props.actions.$$_routeIsChanging.call(null, this, false)
         this.navigator.immediatelyResetRouteStack(newStack)
       })
     }
     if (nextRouter.action === types.ROUTE_RESET) {
       const route = this.getRoute(nextRoute, nextRouter)
       if (!currentRoute) {
+        this.props.actions.$$_routeIsChanging.call(null, this, false)
         this.navigator.resetTo(route)
       } else {
         this.navigator.push(route)
         InteractionManager.runAfterInteractions(() => {
+          this.props.actions.$$_routeIsChanging.call(null, this, false)
           this.navigator.immediatelyResetRouteStack([route])
         })
       }
