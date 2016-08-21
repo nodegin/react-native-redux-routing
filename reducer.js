@@ -9,7 +9,7 @@ const initialState = {
   navActionRenderer: null,
   navActionHandler: null,
   navTitle: null,
-  statusBarSize: Platform.OS === 'ios' ? 20 : 0,
+  statusBarSize: Platform.OS === 'ios' ? 20 : -1,
   appBarSize: 54,
   transitioning: false,
   $$_blurEventListeners: {},

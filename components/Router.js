@@ -110,6 +110,16 @@ export default class extends React.Component {
     }
   }
 
+  getSceneConfigFromOptions(options) {
+    let sceneConfig = null
+    if (!options.animated) {
+      sceneConfig = NoAnimation
+    } else if (options.sceneConfig) {
+      sceneConfig = options.sceneConfig
+    }
+    return sceneConfig
+  }
+
   handleRouteChange(currentRoute, nextRoute, nextRouter) {
     if (nextRouter.action === types.ROUTE_PUSH) {
       this.navigator.push(this.getRoute(nextRoute, nextRouter))
@@ -119,9 +129,10 @@ export default class extends React.Component {
       if (routes.length < 1) {
         return
       }
-      if (nextRouter.options.sceneConfig) {
+      const sceneConfig = this.getSceneConfigFromOptions(nextRouter.options)
+      if (sceneConfig) {
         const newStack = [...routes]
-        newStack[routes.length - 1].sceneConfig = nextRouter.options.sceneConfig
+        newStack[routes.length - 1].sceneConfig = sceneConfig
         this.navigator.immediatelyResetRouteStack(newStack)
       }
       InteractionManager.runAfterInteractions(this.navigator.pop)
@@ -165,7 +176,7 @@ export default class extends React.Component {
       id: nextRoute.id,
       component: nextRoute.component,
       navigation,
-      sceneConfig: nextRouter.options.animated ? (nextRouter.options.sceneConfig || DefaultSceneConfig) : NoAnimation,
+      sceneConfig: this.getSceneConfigFromOptions(nextRouter.options) || DefaultSceneConfig,
     }
   }
 

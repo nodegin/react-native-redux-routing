@@ -51,47 +51,49 @@ export default class extends React.Component {
     }
     const contrastColor = this.props.config.statusBarStyle === 'default' ? '#000' : '#fff'
     return (
-      <View style={[styles.appBar, {
-        backgroundColor: this.props.config.accentColor,
-        height: router.appBarSize + router.statusBarSize,
-        paddingTop: router.statusBarSize,
-      }]}>
-        <View style={[styles.appBarTitle, {
+      <View style={styles.appBarContainer}>
+        <View style={{
+          backgroundColor: this.props.config.accentColor,
+          height: router.statusBarSize,
+        }} />
+        <View style={[styles.appBar, {
+          backgroundColor: this.props.config.accentColor,
           height: router.appBarSize,
-          top: router.statusBarSize,
         }]}>
-          <Text style={[styles.appBarTitleText, { color: contrastColor }]}>{ router.navTitle }</Text>
-        </View>
-        <View style={styles.appBarMenuIconWrapper}>
-          <View style={styles.appBarMenuIcon}>
-            <WebView
-              source={{
-                html:
-  `
-  <style>body{background:${this.props.config.accentColor};margin:0}</style>
-  <body><svg style="width:${appBarIconSize}px;height:${appBarIconSize}px" viewBox="0 0 24 24">
-  <path fill="${contrastColor}" d="${pathData}"/></svg></body>
-  `
-              }}
-              scrollEnabled={false} />
+          <View style={[styles.appBarTitle, { height: router.appBarSize }]}>
+            <Text style={[styles.appBarTitleText, { color: contrastColor }]}>{ router.navTitle }</Text>
           </View>
-          <TouchableHighlight
-            style={[styles.appBarMenuIconHighlight, styles.appBarMenuIconWrapper]}
-            underlayColor="rgba(255,255,255,.25)"
-            onPress={this.handleMenuPress}>
-            <View />
-          </TouchableHighlight>
+          <View style={styles.appBarMenuIconWrapper}>
+            <View style={styles.appBarMenuIcon}>
+              <WebView
+                source={{
+                  html:
+    `
+    <style>body{background:${this.props.config.accentColor};margin:0}</style>
+    <body><svg style="width:${appBarIconSize}px;height:${appBarIconSize}px" viewBox="0 0 24 24">
+    <path fill="${contrastColor}" d="${pathData}"/></svg></body>
+    `
+                }}
+                scrollEnabled={false} />
+            </View>
+            <TouchableHighlight
+              style={[styles.appBarMenuIconHighlight, styles.appBarMenuIconWrapper]}
+              underlayColor="rgba(255,255,255,.25)"
+              onPress={this.handleMenuPress}>
+              <View />
+            </TouchableHighlight>
+          </View>
+          <View style={styles.appBarFillBlank} />
+          {
+            !router.navActionRenderer ? null :
+            <TouchableHighlight
+              style={styles.appBarIconWrapper}
+              underlayColor="rgba(255,255,255,.25)"
+              onPress={this.handleNavActionPress}>
+              {router.navActionRenderer()}
+            </TouchableHighlight>
+          }
         </View>
-        <View style={styles.appBarFillBlank} />
-        {
-          !router.navActionRenderer ? null :
-          <TouchableHighlight
-            style={styles.appBarIconWrapper}
-            underlayColor="rgba(255,255,255,.25)"
-            onPress={this.handleNavActionPress}>
-            {router.navActionRenderer()}
-          </TouchableHighlight>
-        }
       </View>
     )
   }
