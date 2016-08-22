@@ -6,6 +6,7 @@ import Route from './components/Route'
 const { types, ...actions } = _actions
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
   ...stateProps,
   router: ownProps.router,
   actions: {
