@@ -22,13 +22,17 @@ export default class extends React.Component {
   nextRoute = null
 
   componentWillMount() {
-    this.onWillFocusNavigationSub = this.props.navigator.navigationContext.addListener('willfocus', event => {
+    if (this.props.router.$$_previousWillFocusListener) this.props.router.$$_previousWillFocusListener.remove()
+    if (this.props.router.$$_previousDidFocusListener) this.props.router.$$_previousDidFocusListener.remove()
+
+    onWillFocus = this.props.navigator.navigationContext.addListener('willfocus', event => {
       //  this.currentRoute will go away
       //  event.data.route will be focused
       this.nextRoute = event.data.route
       this.props.actions.$$_pageTransitioning.call(null, this, true)
     })
-    this.onDidFocusNavigationSub = this.props.navigator.navigationContext.addListener('didfocus', event => {
+    
+    onDidFocus = this.props.navigator.navigationContext.addListener('didfocus', event => {
       if (this.currentRoute === null && this.nextRoute === null) {
         //  initial route
         if (this.props.router.$$_focusEventListeners[event.data.route.id]) {
@@ -49,17 +53,7 @@ export default class extends React.Component {
       this.nextRoute = null
       this.props.actions.$$_pageTransitioning.call(null, this, false)
     })
-  }
-
-  componentWillUnmount() {
-    if (this.onWillFocusNavigationSub) {
-      this.onWillFocusNavigationSub.remove()
-      this.onWillFocusNavigationSub = null
-    }
-    if (this.onDidFocusNavigationSub) {
-      this.onDidFocusNavigationSub.remove()
-      this.onDidFocusNavigationSub = null
-    }
+    this.props.actions.$$_setPreviousListeners.call(null, this, onWillFocus, onDidFocus)
   }
 
   componentDidMount() {

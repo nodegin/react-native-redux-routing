@@ -16,6 +16,8 @@ const initialState = {
   $$_focusEventListeners: {},
   $$_statusBarConfigured: Platform.OS === 'ios',
   $$_routeIsChanging: false,
+  $$_previousWillFocusListener: null,
+  $$_previousDidFocusListener: null,
 }
 
 const getUpdate = (action, state) => {
@@ -115,6 +117,12 @@ export default function (state = initialState, action = {}) {
       return {
         ...state,
         $$_routeIsChanging: action.changing,
+      }
+    case '$$_SET_PREVIOUS_LISTENERS':
+      return {
+        ...state,
+        $$_previousWillFocusListener: action.onWillFocusListener,
+        $$_previousDidFocusListener: action.onDidFocusListener,
       }
     default:
       return state

@@ -62,7 +62,7 @@ export const _closeDrawer = () => ({ type: types.CLOSE_DRAWER })
 
 const getRouteListenerDispatchable = (dispatchType, eventType, listener) => ({
   type: `${dispatchType.toUpperCase()}_${eventType.toUpperCase()}_LISTENER`,
-  listener
+  listener,
 })
 
 export const _addRouteListener = (type, listener) => {
@@ -95,6 +95,16 @@ export const $$_pageTransitioning = (_caller, transitioning) => {
     dispatch({
       type: '$$_SET_PAGE_TRANSITIONING',
       transitioning,
+    })
+  }
+}
+export const $$_setPreviousListeners = (_caller, onWillFocusListener, onDidFocusListener) => {
+  return dispatch => {
+    if (_caller._class() !== 'StatusBar') return
+    dispatch({
+      type: '$$_SET_PREVIOUS_LISTENERS',
+      onWillFocusListener,
+      onDidFocusListener,
     })
   }
 }
