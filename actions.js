@@ -41,20 +41,20 @@ export const _navigate = (route, options = {}) => {
   }
 }
 
-export const _setNavAction = navAction => {
-  return dispatch => InteractionManager.runAfterInteractions(() => {
-    dispatch({
-      type: types.SET_NAV_ACTION,
-      renderer: navAction.renderer,
-      handler: navAction.handler,
-    })
+export const _setNavAction = action => dispatch => InteractionManager.runAfterInteractions(() => {
+  dispatch({
+    type: types.SET_NAV_ACTION,
+    renderer: action.renderer,
+    handler: action.handler,
   })
-}
-
-export const _setNavTitle = title => ({
-  type: types.SET_NAV_TITLE,
-  title,
 })
+
+export const _setNavTitle = title => dispatch => setTimeout(() => {
+  dispatch({
+    type: types.SET_NAV_TITLE,
+    title,
+  })
+}, 1)
 
 export const _openDrawer = () => ({ type: types.OPEN_DRAWER })
 
