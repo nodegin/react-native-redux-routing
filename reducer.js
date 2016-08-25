@@ -15,6 +15,7 @@ const initialState = {
   transitioning: false,
   $$_blurEventListeners: {},
   $$_focusEventListeners: {},
+  $$_unloadEventListeners: {},
   $$_statusBarConfigured: Platform.OS === 'ios',
   $$_routeIsChanging: false,
   $$_previousWillFocusListener: null,
@@ -83,9 +84,10 @@ export default function (state = initialState, action = {}) {
       }
     case types.ADD_BLUR_LISTENER:
     case types.ADD_FOCUS_LISTENER:
+    case types.ADD_UNLOAD_LISTENER:
       /*  Get current route id  */
       const routeId = state.routes[state.routes.length - 1]
-      const addListeners = `$$_${action.type === types.ADD_BLUR_LISTENER ? 'blur' : 'focus'}EventListeners`
+      const addListeners = `$$_${action.type.replace(/.+_([a-z]+)_.+/gi, '$1').toLowerCase()}EventListeners`
       return {
         ...state,
         [addListeners]: {
@@ -95,7 +97,8 @@ export default function (state = initialState, action = {}) {
       }
     case types.REMOVE_BLUR_LISTENER:
     case types.REMOVE_FOCUS_LISTENER:
-      const listenerType = `$$_${action.type === types.REMOVE_BLUR_LISTENER ? 'blur' : 'focus'}EventListeners`
+    case types.REMOVE_UNLOAD_LISTENER:
+      const listenerType = `$$_${action.type.replace(/.+_([a-z]+)_.+/gi, '$1').toLowerCase()}EventListeners`
       const filtered = Object.keys(state[listenerType]).reduce((listeners, route) =>{
         const current = state[listenerType][route] === action.listener ? {} : { [route]: state[listenerType][route] }
         return { ...listeners, ...current, }

@@ -1,4 +1,4 @@
-# react-native-redux-routing <sup>v1.1.9</sup>
+# react-native-redux-routing <sup>v1.2.0</sup>
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
 [![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)
@@ -172,6 +172,7 @@ this.props.actions._closeDrawer() // Close the navigation drawer
 #### `this.props.actions._addRouteListener(type, listener)`
 
 ```jsx
+this.props.actions._addRouteListener('unload', () => 'Are you sure?') // Attach an `onUnload` listener for the current route
 this.props.actions._addRouteListener('focus', () => 'Entered scene') // Attach an `onFocus` listener for the current route
 this.props.actions._addRouteListener('blur', () => 'Leaved scene') // Attach an `onBlur` listener for the current route
 ```
@@ -179,6 +180,7 @@ this.props.actions._addRouteListener('blur', () => 'Leaved scene') // Attach an 
 #### `this.props.actions._removeRouteListener(listener)`
 
 ```jsx
+this.props.actions._removeRouteListener('unload', listener) // `listener` must be the same one as you added to remove
 this.props.actions._removeRouteListener('focus', listener) // `listener` must be the same one as you added to remove
 this.props.actions._removeRouteListener('blur', listener) // `listener` must be the same one as you added to remove
 ```
@@ -255,6 +257,16 @@ dispatch({
 
 dispatch({
   type: routerTypes.REMOVE_FOCUS_LISTENER,
+  listener,
+})
+
+dispatch({
+  type: routerTypes.ADD_UNLOAD_LISTENER,
+  listener,
+})
+
+dispatch({
+  type: routerTypes.REMOVE_UNLOAD_LISTENER,
   listener,
 })
 ```
@@ -364,6 +376,34 @@ class extends React.Component {
     this.props.actions._removeRouteListener('focus', this.onSceneFocusListener)
     this.props.actions._removeRouteListener('blur', this.onSceneBlurListener)
     // Alert message will not be shown again from now on
+  }
+
+  ...
+}
+```
+
+## Confirm leaving route
+
+```jsx
+class extends React.Component {
+  ...
+
+  state = { apples: 10 }
+
+  componentDidMount() {
+    this.onUnload = () => {
+      if (this.state.apples > 0) {
+        return 'Are you sure you want to leave your apples?'
+      }
+      // returning null will not prompt for confirmation
+      return null
+    }
+    this.props.actions._addRouteListener('unload', this.onUnloadListener)
+  }
+
+  componentWillUnmount() {
+    this.props.actions._removeRouteListener('unload', this.onUnloadListener)
+    // Unload listener has been removed
   }
 
   ...
