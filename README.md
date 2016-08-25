@@ -391,7 +391,7 @@ class extends React.Component {
   state = { apples: 10 }
 
   componentDidMount() {
-    this.onUnload = () => {
+    this.onUnloadListener = () => {
       if (this.state.apples > 0) {
         return 'Are you sure you want to leave your apples?'
       }
