@@ -156,6 +156,7 @@ export default class extends React.Component {
     if (nextRouter.action === types.ROUTE_RESET) {
       const route = this.getRoute(nextRoute, nextRouter)
       if (!currentRoute) {
+        /*  Initial route  */
         this.props.actions.$$_routeIsChanging.call(null, this, false)
         this.navigator.resetTo(route)
       } else {

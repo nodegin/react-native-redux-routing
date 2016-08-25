@@ -19,7 +19,9 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.drawer[nextProps.router.drawerOpen ? 'openDrawer' : 'closeDrawer']()
+    if (this.drawer) {
+      this.drawer[nextProps.router.drawerOpen ? 'openDrawer' : 'closeDrawer']()
+    }
   }
 
   render() {

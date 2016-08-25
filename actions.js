@@ -33,28 +33,24 @@ export const _navigate = (route, options = {}) => {
       title = getTitle(route)
     }
     dispatch({ type, options })
-    //  Not using InteractionManager.runAfterInteractions for better visual effect
-    setTimeout(() => {
-      dispatch(_setNavTitle(title))
-      dispatch(_closeDrawer())
-    }, 0)
+    dispatch({
+      type: types.SET_NAV_TITLE,
+      title,
+    })
+    dispatch(_closeDrawer())
   }
 }
 
-export const _setNavAction = action => dispatch => InteractionManager.runAfterInteractions(() => {
-  dispatch({
-    type: types.SET_NAV_ACTION,
-    renderer: action.renderer,
-    handler: action.handler,
-  })
-})
+export const _setNavAction = action => dispatch => setTimeout(() => dispatch({
+  type: types.SET_NAV_ACTION,
+  renderer: action.renderer,
+  handler: action.handler,
+}), 0)
 
-export const _setNavTitle = title => dispatch => setTimeout(() => {
-  dispatch({
-    type: types.SET_NAV_TITLE,
-    title,
-  })
-}, 1)
+export const _setNavTitle = title => dispatch => setTimeout(() => dispatch({
+  type: types.SET_NAV_TITLE,
+  title,
+}), 0)
 
 export const _openDrawer = () => ({ type: types.OPEN_DRAWER })
 
