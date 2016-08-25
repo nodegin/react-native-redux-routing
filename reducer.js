@@ -4,6 +4,7 @@ import { types } from './actions'
 const initialState = {
   action: null,
   options: {},
+  data: {},
   routes: [],
   drawerOpen: false,
   navActionRenderer: null,
@@ -22,7 +23,7 @@ const initialState = {
 
 const getUpdate = (action, state) => {
   let routes
-  let { route, reset, ...options } = action.options
+  let { route, reset, data = {}, ...options } = action.options
   if (action.type === types.ROUTE_POP) {
     routes = state.routes.filter((_, i) => i !== state.routes.length - 1)
     route = routes[routes.length - 1]
@@ -42,6 +43,7 @@ const getUpdate = (action, state) => {
     action: action.type,
     options,
     routes,
+    data,
     navActionRenderer: null,
     navActionHandler: null,
     $$_routeIsChanging: true,

@@ -1,4 +1,4 @@
-# react-native-redux-routing <sup>v1.1.7</sup>
+# react-native-redux-routing <sup>v1.1.8</sup>
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
 [![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)
@@ -119,6 +119,7 @@ You can set the `immersive` property to true to hide the app bar (including navi
 
 - `this.props.router.drawerOpen`
 - `this.props.router.navTitle`
+- `this.props.router.data`
 - `this.props.router.routes`
 - `this.props.router.statusBarSize`
 - `this.props.router.appBarSize`
@@ -138,6 +139,7 @@ this.props.actions._navigate('home', { reset: true }) // Reset the routes stack 
 this.props.actions._navigate('page-1', { sceneConfig: CustomConfig }) // Changing scene with custom animation
 this.props.actions._navigate('page-2', { animated: false }) // Changing scene without animation
 this.props.actions._navigate('another', { replace: true }) // Replace the current scene to new scene
+this.props.actions._navigate('analytics', { data: someObject }) // Move to another scene and transferring data to it
 ```
 
 #### `this.props.actions._setNavAction(action = { renderer, handler })`
