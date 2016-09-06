@@ -1,4 +1,4 @@
-# react-native-redux-routing <sup>v1.2.0</sup>
+# react-native-redux-routing <sup>v1.2.1</sup>
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
 [![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)
@@ -149,6 +149,7 @@ this.props.actions._setNavAction({
   renderer: () => <Text>123</Text>, // Function that returns a React element
   handler: () => alert('clicked'), // Function that will triggers when the rendered element was pressed
 })
+this.props.actions._setNavAction(null) // Reset nav action
 ```
 
 #### `this.props.actions._setNavTitle(title)`

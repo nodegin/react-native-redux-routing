@@ -65,8 +65,8 @@ export const _navigate = (route, options = {}) => {
 
 export const _setNavAction = action => dispatch => setTimeout(() => dispatch({
   type: types.SET_NAV_ACTION,
-  renderer: action.renderer,
-  handler: action.handler,
+  renderer: action !== null ? action.renderer : null,
+  handler: action !== null ? action.handler : null,
 }), 0)
 
 export const _setNavTitle = title => dispatch => setTimeout(() => dispatch({
