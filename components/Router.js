@@ -206,6 +206,16 @@ export default class extends React.Component {
         route,
         children: child
       })
+    } else {
+      child = (
+        <View style={{ flex: 1 }}>
+          <View style={{
+            backgroundColor: config.statusBarStyle === 'default' ? '#fff' : '#000',
+            height: config.statusBarSize,
+          }} />
+          {child}
+        </View>
+      )
     }
 
     return <StatusBar {...this.props} navigator={navigator}>{child}</StatusBar>
