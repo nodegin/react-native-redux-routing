@@ -253,8 +253,9 @@ The default configuration are listed below:
 ```jsx
 const defaultConfig = {
   renderNavigationView: () => null,
-  statusBarStyle: 'default',
   accentColor: '#E0E0E0',
+  statusBarStyle: 'default',
+  statusBarSize: 20,
 }
 ```
 
@@ -270,6 +271,14 @@ const defaultConfig = {
     <td>Function that returns a React element.</td>
   </tr>
   <tr>
+    <td>accentColor</td>
+    <td>String</td>
+    <td>
+      Sets the accent color of the application,<br>
+      must be a solid color starting with #.
+    </td>
+  </tr>
+  <tr>
     <td>statusBarStyle</td>
     <td>String</td>
     <td>
@@ -278,11 +287,11 @@ const defaultConfig = {
     </td>
   </tr>
   <tr>
-    <td>accentColor</td>
-    <td>String</td>
+    <td>statusBarSize</td>
+    <td>Number</td>
     <td>
-      Sets the accent color of the application,<br>
-      must be a solid color starting with #.
+      Specify the size of the status bar.<br>
+      Obtain yourself from other modules.
     </td>
   </tr>
 </table>
