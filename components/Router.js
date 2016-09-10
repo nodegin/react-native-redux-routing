@@ -59,11 +59,15 @@ export default class extends React.Component {
         ['default', 'light-content'].indexOf(this.props.config.statusBarStyle) < 0) {
       throw new Error('Property `statusBarStyle` in config must be "default" or "light-content"')
     }
+    if (typeof this.props.config.statusBarSize !== 'number') {
+      throw new Error('Property `statusBarSize` must be Number')
+    }
 
     const defaultConfig = {
       renderNavigationView: () => null,
-      statusBarStyle: 'default',
       accentColor: '#E0E0E0',
+      statusBarStyle: 'default',
+      statusBarSize: 0,
     }
 
     this.config = {...defaultConfig, ...this.props.config}

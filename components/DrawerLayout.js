@@ -41,7 +41,7 @@ export default class extends React.Component {
           return (
             <View style={[styles.drawerWrapper, {
               backgroundColor: this.props.config.accentColor,
-              paddingTop: this.props.router.statusBarSize,
+              paddingTop: this.props.config.statusBarSize,
             }]}>
               {injected}
             </View>

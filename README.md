@@ -1,4 +1,4 @@
-# react-native-redux-routing <sup>v1.2.1</sup>
+# react-native-redux-routing <sup>v1.2.2</sup>
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
 [![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)
@@ -19,6 +19,7 @@ Your `Application.js` should looks like below:
 
 ```jsx
 import React from 'react'
+import { Platform } from 'react-native'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -29,69 +30,41 @@ import {
   Route
 } from 'react-native-redux-routing'
 
+import * as actionsA from './actions/actionsA'
+import * as actionsB from './actions/actionsB'
+
 import { SplashPage, MainPage } from './pages'
+
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 
 export default connect(
   state => ({
     router: state.router,
+    a: state.a,
+    b: state.b,
   }),
   dispatch => ({
-    actions: bindActionCreators(routerActions, dispatch),
+    actions: bindActionCreators({
+      ...routerActions,
+      ...actionsA,
+      ...actionsB,
+    }, dispatch),
   })
 )(class extends React.Component {
 
   render() {
+    const statusBarSize = Platform.OS === 'ios' ? 20 : ExtraDimensions.get('STATUS_BAR_HEIGHT')
     const config = {
-      statusBarStyle: 'light-content',
       renderNavigationView: () => <NavigationDrawer />,
       accentColor: '#C2185B',
+      statusBarStyle: 'light-content',
+      statusBarSize // You have to specify the size of status bar manually
     }
     return (
       <Router {...this.props} config={config} initialRoute="splash">
         <Route id="splash" component={SplashPage} immersive={true} />
         <Route id="main" component={MainPage} />
       </Router>
-    )
-  }
-
-})
-```
-
-If you want to use the router along with your own action creators / reducers, add the `mergeProps` function to your route component:
-
-```jsx
-import React from 'react'
-import { View, Text } from 'react-native'
-
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import * as userActions from '../actions/userActions'
-
-import { mergeProps } from 'react-native-redux-routing'
-
-const mapStateToProps = state => ({
-  user: state.user,
-})
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(userActions, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(class extends React.Component {
-
-  componentWillMount() {
-    const ok = this.props.actions.doSomethingForUser()
-    if (ok) {
-      const name = this.props.user.name
-      this.props.actions._setNavTitle(`Hello ${name}`)
-    }
-    setTimeout(() => this.props.actions._setNavTitle('WOW'), 2000)
-  }
-
-  render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text>Current Page: {this.props.router.navTitle}</Text>
-      </View>
     )
   }
 
@@ -121,7 +94,6 @@ You can set the `immersive` property to true to hide the app bar (including navi
 - `this.props.router.navTitle`
 - `this.props.router.data`
 - `this.props.router.routes`
-- `this.props.router.statusBarSize`
 - `this.props.router.appBarSize`
 - `this.props.router.transitioning`
 

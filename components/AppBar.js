@@ -54,7 +54,7 @@ export default class extends React.Component {
       <View style={styles.appBarContainer}>
         <View style={{
           backgroundColor: this.props.config.accentColor,
-          height: router.statusBarSize,
+          height: this.props.config.statusBarSize,
         }} />
         <View style={[styles.appBar, {
           backgroundColor: this.props.config.accentColor,

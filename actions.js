@@ -98,15 +98,6 @@ export const _removeRouteListener = (type, listener) => {
 }
 
 /*  Router internal method, DO NOT CALL  */
-export const $$_updateStatusBarSize = (_caller, size) => {
-  return dispatch => {
-    if (_caller._class() !== 'StatusBar') return
-    dispatch({
-      type: '$$_UPDATE_STATUS_BAR_SIZE',
-      size,
-    })
-  }
-}
 export const $$_pageTransitioning = (_caller, transitioning) => {
   return dispatch => {
     if (_caller._class() !== 'StatusBar') return

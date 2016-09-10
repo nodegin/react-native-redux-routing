@@ -56,23 +56,9 @@ export default class extends React.Component {
     this.props.actions.$$_setPreviousListeners.call(null, this, onWillFocus, onDidFocus)
   }
 
-  componentDidMount() {
-    if (this.props.router.$$_statusBarConfigured) return
-    if (Platform.OS !== 'android') return
-    /*  Give some time to render the layout  */
-    setTimeout(() => {
-      if (this.refs.flex) {
-        this.refs.flex.measureInWindow((ox, oy, width, height, px, py) => {
-          const barSize = Math.abs(oy)
-          this.props.actions.$$_updateStatusBarSize.call(null, this, barSize)
-        })
-      }
-    }, 100)
-  }
-
   render() {
     return (
-      <View ref="flex" style={{ backgroundColor: '#fffeff', flex: 1 }}>
+      <View style={{ backgroundColor: '#fffeff', flex: 1 }}>
         <StatusBar
           barStyle={this.props.config.statusBarStyle}
           translucent={true}

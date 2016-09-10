@@ -1,4 +1,3 @@
-import { Platform } from 'react-native'
 import { types } from './actions'
 
 const initialState = {
@@ -10,13 +9,11 @@ const initialState = {
   navActionRenderer: null,
   navActionHandler: null,
   navTitle: null,
-  statusBarSize: Platform.OS === 'ios' ? 20 : -1,
   appBarSize: 54,
   transitioning: false,
   $$_blurEventListeners: {},
   $$_focusEventListeners: {},
   $$_unloadEventListeners: {},
-  $$_statusBarConfigured: Platform.OS === 'ios',
   $$_routeIsChanging: false,
   $$_previousWillFocusListener: null,
   $$_previousDidFocusListener: null,
@@ -106,12 +103,6 @@ export default function (state = initialState, action = {}) {
       return {
         ...state,
         [listenerType]: filtered,
-      }
-    case '$$_UPDATE_STATUS_BAR_SIZE':
-      return state.$$_statusBarConfigured ? state : {
-        ...state,
-        statusBarSize: Platform.OS === 'ios' ? 20 : action.size,
-        $$_statusBarConfigured: true
       }
     case '$$_SET_PAGE_TRANSITIONING':
       return {
