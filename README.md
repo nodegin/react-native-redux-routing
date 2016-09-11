@@ -53,7 +53,7 @@ export default connect(
 )(class extends React.Component {
 
   render() {
-    const statusBarSize = Platform.OS === 'ios' ? 20 : ExtraDimensions.get('STATUS_BAR_HEIGHT')
+    const statusBarSize = Platform.OS === 'ios' ? 20 : Platform.Version >= 23 ? ExtraDimensions.get('STATUS_BAR_HEIGHT') : 0
     const config = {
       renderNavigationView: () => <NavigationDrawer />,
       accentColor: '#C2185B',
