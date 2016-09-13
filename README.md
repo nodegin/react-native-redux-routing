@@ -1,4 +1,4 @@
-# react-native-redux-routing <sup>v1.2.4</sup>
+# react-native-redux-routing <sup>v1.2.5</sup>
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
 [![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)

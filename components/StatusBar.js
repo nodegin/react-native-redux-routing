@@ -57,12 +57,13 @@ export default class extends React.Component {
   }
 
   render() {
+    const statusBarBackground = this.props.config.statusBarStyle === 'default' ? '#fff' : '#000'
     return (
       <View style={{ backgroundColor: '#fffeff', flex: 1 }}>
         <StatusBar
           barStyle={this.props.config.statusBarStyle}
           translucent={this.props.config.transparentStatusBar}
-          backgroundColor="transparent" />
+          backgroundColor={this.props.config.transparentStatusBar ? 'transparent' : statusBarBackground} />
         {this.props.children}
       </View>
     )
