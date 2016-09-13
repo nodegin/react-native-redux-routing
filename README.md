@@ -1,4 +1,4 @@
-# react-native-redux-routing <sup>v1.2.3</sup>
+# react-native-redux-routing <sup>v1.2.4</sup>
 
 [![npm](https://img.shields.io/npm/v/react-native-redux-routing.svg?maxAge=2592000)](https://www.npmjs.com/package/react-native-redux-routing)
 [![changelog](https://img.shields.io/badge/view-changelog-9575CD.svg?maxAge=2592000)](https://github.com/nodegin/react-native-redux-routing/wiki/Changelog)
@@ -57,6 +57,7 @@ export default connect(
     const config = {
       renderNavigationView: () => <NavigationDrawer />,
       accentColor: '#C2185B',
+      transparentStatusBar: true,
       statusBarStyle: 'light-content',
       statusBarSize // You have to specify the size of status bar manually
     }
@@ -254,6 +255,7 @@ The default configuration are listed below:
 const defaultConfig = {
   renderNavigationView: () => null,
   accentColor: '#E0E0E0',
+  transparentStatusBar: true,
   statusBarStyle: 'default',
   statusBarSize: 20,
 }
@@ -276,6 +278,13 @@ const defaultConfig = {
     <td>
       Sets the accent color of the application,<br>
       must be a solid color starting with #.
+    </td>
+  </tr>
+  <tr>
+    <td>transparentStatusBar</td>
+    <td>Boolean</td>
+    <td>
+      Indicates the status bar should be transparent. Android only.
     </td>
   </tr>
   <tr>

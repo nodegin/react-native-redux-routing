@@ -61,7 +61,7 @@ export default class extends React.Component {
       <View style={{ backgroundColor: '#fffeff', flex: 1 }}>
         <StatusBar
           barStyle={this.props.config.statusBarStyle}
-          translucent={true}
+          translucent={this.props.config.transparentStatusBar}
           backgroundColor="transparent" />
         {this.props.children}
       </View>

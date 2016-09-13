@@ -66,6 +66,7 @@ export default class extends React.Component {
     const defaultConfig = {
       renderNavigationView: () => null,
       accentColor: '#E0E0E0',
+      transparentStatusBar: true,
       statusBarStyle: 'default',
       statusBarSize: 0,
     }
