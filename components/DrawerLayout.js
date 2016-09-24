@@ -30,6 +30,9 @@ export default class extends React.Component {
         ref={ref => this.drawer = ref}
         drawerWidth={windowSize.width * 0.75}
         drawerPosition={DrawerLayout.positions.Left}
+        onDrawerOpen={() =>
+          !this.props.router.drawerOpen ? this.props.actions._openDrawer() : null
+        }
         onDrawerClose={() =>
           this.props.router.drawerOpen ? this.props.actions._closeDrawer() : null
         }

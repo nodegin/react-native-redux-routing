@@ -18,10 +18,18 @@ export default class extends React.Component {
     return 'StatusBar'
   }
 
+  state = {
+    statusBar: null,
+  }
+  setState(obj) {
+    this.mounted && super.setState(obj)
+  }
+
   currentRoute = null
   nextRoute = null
 
   componentWillMount() {
+    this.mounted = true
     if (this.props.router.$$_previousWillFocusListener) this.props.router.$$_previousWillFocusListener.remove()
     if (this.props.router.$$_previousDidFocusListener) this.props.router.$$_previousDidFocusListener.remove()
 
@@ -56,14 +64,27 @@ export default class extends React.Component {
     this.props.actions.$$_setPreviousListeners.call(null, this, onWillFocus, onDidFocus)
   }
 
+  componentWillUnmount() {
+    this.mounted = false
+  }
+
   render() {
     const statusBarBackground = this.props.config.statusBarStyle === 'default' ? '#fff' : '#000'
+    if (this.props.router.action === null && this.state.statusBar === null) {
+      InteractionManager.runAfterInteractions(() => {
+        this.setState({
+          statusBar: (
+            <StatusBar
+              barStyle={this.props.config.statusBarStyle}
+              translucent={this.props.config.transparentStatusBar}
+              backgroundColor={this.props.config.transparentStatusBar ? 'transparent' : statusBarBackground} />
+          )
+        })
+      })
+    }
     return (
       <View style={{ backgroundColor: '#fffeff', flex: 1 }}>
-        <StatusBar
-          barStyle={this.props.config.statusBarStyle}
-          translucent={this.props.config.transparentStatusBar}
-          backgroundColor={this.props.config.transparentStatusBar ? 'transparent' : statusBarBackground} />
+        {this.state.statusBar}
         {this.props.children}
       </View>
     )

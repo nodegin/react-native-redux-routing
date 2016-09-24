@@ -1,6 +1,6 @@
 {
   "name": "react-native-redux-routing",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Universal routing module for iOS / Android, designed for Redux based React Native applications.",
   "author": "nodegin",
   "license": "MIT",
